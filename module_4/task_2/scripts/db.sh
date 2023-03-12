@@ -26,7 +26,7 @@ addUser() {
   then
     echo "$userName, $userRole">>$DB_PATH
   else
-     read -p "Do you want to create a file users.db?(Y/N)" response
+     read -p "Do you want to create a file users.db?(Y/N) " response
 
      if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
         then
@@ -81,11 +81,20 @@ findUser() {
   read -p "Please type a user name" userName
   res=`grep -i $userName $DB_PATH`
 
-  if [ -z "$res" ]
+  if [[ -z "$res" ]]
     then
       echo "User not found"
     else
       echo "$res"
+  fi
+}
+
+printUsers() {
+  if [[ ! -z "$1" ]]
+  then
+    echo $(awk '{print NR"." $0}' $DB_PATH) | tac
+  else
+    echo $(awk '{print NR"." $0}' $DB_PATH)
   fi
 }
 
@@ -95,5 +104,5 @@ case "$command" in
   restore) doRestore;;
   find) findUser;;
   "" | help) showInfo ;;
-  list) ;;
+  list) printUsers "$option" ;;
 esac

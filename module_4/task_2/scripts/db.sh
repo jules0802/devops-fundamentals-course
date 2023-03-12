@@ -8,7 +8,8 @@ option=$2
 validate() {
   local value=$1
 
-  if [[ ! "$value" =~ ^[a-zA-Z\ ]+$ ]]; then
+  if [[ ! "$value" =~ ^[a-zA-Z\ ]+$ ]]
+  then
     echo "Entered values must be latin letters!"
     exit 0
   fi
@@ -21,7 +22,8 @@ addUser() {
   read -p "Enter a user role " userRole
   validate "$userRole"
 
-  if [[ -e $DB_PATH ]]; then
+  if [[ -e $DB_PATH ]]
+  then
     echo "$userName, $userRole">>$DB_PATH
   else
      read -p "Do you want to create a file users.db?(Y/N)" response
@@ -63,10 +65,23 @@ doBackup() {
   cp $DB_PATH ../data/$backupPath
 }
 
+doRestore() {
+  resentBackup=$(ls -t ../data/*.backup | tail -n 1)
+  if [[ -e $DB_PATH ]]
+  then
+    cat "$resentBackup">$DB_PATH
+    echo "Database was restored from $resentBackup"
+  else
+     echo "No backup found"
+     exit 0
+  fi
+
+}
+
 case "$command" in
   add) addUser ;;
   backup) doBackup ;;
-  restore) ;;
+  restore) doRestore;;
   find) ;;
   "" | help) showInfo ;;
   list) ;;

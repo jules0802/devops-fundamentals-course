@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DB_DIR='./data/users.db'
+DB_PATH='../data/users.db'
 
 command=$1
 option=$2
@@ -15,14 +15,14 @@ validate() {
 }
 
 addUser() {
-  read -p "Enter a user name" userName
-  validate $userName
+  read -p "Enter a user name " userName
+  validate "$userName"
 
-  read -p "Enter a user role" userRole
-  validate userRole
+  read -p "Enter a user role " userRole
+  validate "$userRole"
 
-  if [[ -e $DB_DIR ]]; then
-    echo "$userName, $userRole">>$DB_DIR
+  if [[ -e $DB_PATH ]]; then
+    echo "$userName, $userRole">>$DB_PATH
   else
      read -p "Do you want to create a file users.db?(Y/N)" response
 
@@ -31,9 +31,9 @@ addUser() {
             mkdir data
             cd data
             touch users.db
-            echo "$userName, $userRole">>$DB_DIR
+            echo "$userName, $userRole">>$DB_PATH
         else
-            exit 0
+            exit 1
      fi
   fi
 }
@@ -57,11 +57,15 @@ result in an opposite order – from bottom to top"
  echo "help    Prints instructions on how to use this script with a description of all available commands"
 }
 
-
+doBackup() {
+  backupPath=$(date +'%Y-%m-%d')-users.db.backup
+  echo $backupPath
+  cp $DB_PATH ../data/$backupPath
+}
 
 case "$command" in
   add) addUser ;;
-  backup)  ;;
+  backup) doBackup ;;
   restore) ;;
   find) ;;
   "" | help) showInfo ;;

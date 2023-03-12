@@ -75,14 +75,25 @@ doRestore() {
      echo "No backup found"
      exit 0
   fi
+}
 
+findUser() {
+  read -p "Please type a user name" userName
+  res=`grep -i $userName $DB_PATH`
+
+  if [ -z "$res" ]
+    then
+      echo "User not found"
+    else
+      echo "$res"
+  fi
 }
 
 case "$command" in
   add) addUser ;;
   backup) doBackup ;;
   restore) doRestore;;
-  find) ;;
+  find) findUser;;
   "" | help) showInfo ;;
   list) ;;
 esac

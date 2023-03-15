@@ -18,4 +18,6 @@ ENV_CONFIGURATION=production
 nest build
 zip -r $clientBuildFile $BUILD_DIR
 
+bash $ROOT_DIR/scripts/countfilesdeep.sh $BUILD_DIR
+
 echo "Client app was build with $ENV_CONFIGURATION configuration."
